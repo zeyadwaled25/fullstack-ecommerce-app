@@ -4,13 +4,24 @@ import './index.css'
 import App from './App.tsx'
 import { ChakraProvider } from "@chakra-ui/react"
 import { BrowserRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from 'react-query'
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false
+    }
+  }
+})
 
 createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
-    <ChakraProvider>
-      <StrictMode>
-        <App />
-      </StrictMode>
-    </ChakraProvider>
-  </BrowserRouter>
+  <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <ChakraProvider>
+        <StrictMode>
+          <App />
+        </StrictMode>
+      </ChakraProvider>
+    </BrowserRouter>
+  </QueryClientProvider>
 )
