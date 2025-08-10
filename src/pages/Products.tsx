@@ -3,6 +3,7 @@ import ProductCard from "../components/ProductCard";
 import axios from "axios";
 import type { IProductResponse, IProduct } from "../interfaces";
 import { useQuery } from "react-query";
+import ProductSkeleton from "../components/ProductCardSkeleton";
 
 const ProductsPage = () => {
   const getProducts = async () => {
@@ -11,7 +12,11 @@ const ProductsPage = () => {
   }
 
   const { isLoading, data, error } = useQuery("products", () => getProducts())
-  if (isLoading) return <h3>Loading...</h3>
+  if (isLoading) return (
+    <Grid margin={30} templateColumns={'repeat(auto-fill, minmax(300px, 1fr))'} gap={'6'}>
+      {Array.from({length: 20}, (_, idx) => <ProductSkeleton key={idx}/>)}
+    </Grid>
+  )
 
   return (
     <div>
