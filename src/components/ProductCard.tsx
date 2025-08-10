@@ -10,7 +10,7 @@ const ProductCard = (attributes: IProduct) => {
     <Card border={'1px solid #a8b5c8'} bg={'none'} key={id}>
       <CardBody>
         <Image
-          src={`http://localhost:1337${thumbnail.url}`}
+          src={`${import.meta.env.VITE_SERVER_URL}${thumbnail.url}`}
           alt={title} 
           borderRadius='50%'
           width={'180px'}

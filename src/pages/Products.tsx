@@ -9,7 +9,7 @@ const ProductsPage = () => {
 
   useEffect(() => {
     (() => {
-      axios.get<IProductResponse>("http://localhost:1337/api/products?fields=title,description,price,stock&populate=*&sort=createdAt:DESC")
+      axios.get<IProductResponse>(`${import.meta.env.VITE_SERVER_URL}/api/products?fields=title,description,price,stock&populate=*&sort=createdAt:DESC`)
       .then(res => setProductList(res.data.data))
       .catch(err => console.log(err))
     })()
