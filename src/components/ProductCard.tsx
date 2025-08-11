@@ -1,6 +1,7 @@
 import { Button, Card, CardBody, CardFooter, Divider, Heading, Image, Stack, Text, useColorMode } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import type { IProduct } from "../interfaces";
+import { formattedPrice } from "../utils";
 
 const ProductCard = (attributes: IProduct) => {
   const {id, documentId, title, description, price, thumbnail} = attributes
@@ -23,8 +24,8 @@ const ProductCard = (attributes: IProduct) => {
           <Text fontSize={'sm'} textAlign={'center'}>
             {description}
           </Text>
-          <Text color='purple.600' fontSize='3xl' textAlign={'center'}>
-            {`$${price}`}
+          <Text color='blue.300' fontSize='3xl' textAlign={'center'}>
+            {formattedPrice(price)}
           </Text>
         </Stack>
       </CardBody>
@@ -43,10 +44,9 @@ const ProductCard = (attributes: IProduct) => {
           w={"full"}
           _hover={{
             bg: colorMode !== "light" ? "#e6f3fd" : "#9f7aea",
-            color: colorMode === "light" ? "white" : "#9f7aea",
+            color: colorMode === "light" ? "#e6f3fd" : "#9f7aea",
             border: "transparent",
           }}
-          mt={6}
         >
           View Details
         </Button>

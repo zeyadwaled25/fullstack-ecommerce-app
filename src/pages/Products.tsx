@@ -11,7 +11,7 @@ const ProductsPage = () => {
     return data
   }
 
-  const { isLoading, data, error } = useQuery("products", () => getProducts())
+  const { isLoading, data } = useQuery("products", () => getProducts())
   if (isLoading) return (
     <Grid margin={30} templateColumns={'repeat(auto-fill, minmax(300px, 1fr))'} gap={'6'}>
       {Array.from({length: 20}, (_, idx) => <ProductSkeleton key={idx}/>)}
