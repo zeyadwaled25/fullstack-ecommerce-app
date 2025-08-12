@@ -19,11 +19,16 @@ import {
   FormHelperText,
 } from '@chakra-ui/react'
 import { useState, type ChangeEvent, type FormEvent } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectLogin, userLogin } from '../app/features/login/loginSlice'
+import type { AppDispatch } from '../app/store'
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch<AppDispatch>()
+  const {loading} = useSelector(selectLogin)
+
   const [user, setUser] = useState({
-    email: "",
+    identifier: "",
     password: ""
   })
   const [isEmail, setIsEmail] = useState(false)
@@ -37,12 +42,12 @@ export default function LoginPage() {
 
   const submitHandler = (e: FormEvent<HTMLInputElement>) => {
     e.preventDefault()
-    if (!user.email && !user.password) {
+    if (!user.identifier && !user.password) {
       setIsEmail(true)
       setIsPassword(true)
       return
     }
-    if (!user.email) {
+    if (!user.identifier) {
       setIsEmail(true)
     }
     if (!user.password) {
@@ -50,6 +55,7 @@ export default function LoginPage() {
     }
     setIsEmail(false)
     setIsPassword(false)
+    dispatch(userLogin(user))
   }
 
   return (
@@ -79,11 +85,11 @@ export default function LoginPage() {
               <FormLabel>Email address</FormLabel>
               <Input
                 type="email"
-                name="email"
+                name="identifier"
                 isInvalid={isEmail}
                 errorBorderColor='red.500'
                 placeholder='Enter Your Email:'
-                value={user.email}
+                value={user.identifier}
                 onChange={onChangeHandler}/>
                 {isEmail ? <FormHelperText color={'red.500'}>Email is required.</FormHelperText> : null}
             </FormControl>
@@ -122,7 +128,8 @@ export default function LoginPage() {
                 _hover={{
                   bg: isEmail || isPassword ? 'red.600' : 'blue.600',
                 }}
-                type='submit'>
+                type='submit'
+                isLoading={loading}>
                 Sign in
               </Button>
             </Stack>

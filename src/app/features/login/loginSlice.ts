@@ -1,29 +1,52 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from 'axios'
-import type { IProductResponse } from '../../../interfaces'
+import type { PayloadAction } from '@reduxjs/toolkit'
+import axios, { AxiosError } from 'axios'
+
+export interface ILoginPayload {
+  identifier: string
+  password: string
+}
+
+export interface ILoginResponse {
+  jwt: string
+  user: {
+    id: number
+    username: string
+    email: string
+  }
+}
 
 export interface ILoginState {
-  loading: boolean;
-  data: IProductResponse | null;
-  error: string | null;
+  loading: boolean
+  data: ILoginResponse | null
+  error: string | null
 }
 
 const initialState: ILoginState = {
   loading: false,
   data: null,
-  error: null
+  error: null,
 }
 
-export const userLogin = createAsyncThunk("login/userLogin", async (_, thunkAPI) => {
-  const { rejectWithValue } = thunkAPI
-
-  try {
-    const {data} = await axios.get<IProductResponse>(`${import.meta.env.VITE_SERVER_URL}/api/auth/local`)
-    return data
-  } catch (error) {
-    return rejectWithValue(error)
+export const userLogin = createAsyncThunk<
+  ILoginResponse,
+  ILoginPayload,
+  { rejectValue: string }
+>(
+  'login/userLogin',
+  async (user, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.post<ILoginResponse>(
+        `${import.meta.env.VITE_SERVER_URL}/api/auth/local`,
+        user
+      )
+      return data
+    } catch (err) {
+      const error = err as AxiosError<{ error?: { message?: string } }>
+      return rejectWithValue(error.response?.data?.error?.message || 'Login failed')
+    }
   }
-}) 
+)
 
 export const loginSlice = createSlice({
   name: 'login',
@@ -32,20 +55,20 @@ export const loginSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(userLogin.pending, (state) => {
-        state.loading = true;
+        state.loading = true
       })
-      .addCase(userLogin.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data = action.payload;
-        state.error = null;
+      .addCase(userLogin.fulfilled, (state, action: PayloadAction<ILoginResponse>) => {
+        state.loading = false
+        state.data = action.payload
+        state.error = null
       })
       .addCase(userLogin.rejected, (state, action) => {
-        state.loading = false;
-        state.data = null;
-        state.error = action.payload as string;
-      });
+        state.loading = false
+        state.data = null
+        state.error = action.payload || 'Unknown Error'
+      })
   },
-});
+})
 
-export const selectLogin = ({ login }: { login: ILoginState }) => login;
-export default loginSlice.reducer;
+export const selectLogin = (state: { login: ILoginState }) => state.login
+export default loginSlice.reducer
