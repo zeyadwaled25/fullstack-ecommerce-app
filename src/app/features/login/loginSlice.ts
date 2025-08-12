@@ -1,6 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import axios, { AxiosError } from 'axios'
+import { createStandaloneToast } from '@chakra-ui/react'
+
+const {toast} = createStandaloneToast()
 
 export interface ILoginPayload {
   identifier: string
@@ -61,11 +64,26 @@ export const loginSlice = createSlice({
         state.loading = false
         state.data = action.payload
         state.error = null
+        toast({
+          title: 'Logged in successfully.',
+          status: 'success',
+          duration: 2500,
+          isClosable: true,
+        })
       })
       .addCase(userLogin.rejected, (state, action) => {
+        console.log(action);
+        
         state.loading = false
         state.data = null
         state.error = action.payload || 'Unknown Error'
+        toast({
+          title: action.payload,
+          description: "Make sure you have the correct Email or Password",
+          status: 'error',
+          duration: 2500,
+          isClosable: true,
+        })
       })
   },
 })
