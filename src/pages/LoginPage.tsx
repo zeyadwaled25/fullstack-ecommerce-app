@@ -16,11 +16,37 @@ import {
   Highlight,
   InputGroup,
   InputRightElement,
+  FormHelperText,
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useState, type ChangeEvent, type FormEvent } from 'react'
 
 export default function LoginPage() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [user, setUser] = useState({
+    email: "",
+    password: ""
+  })
+  const [isEmail, setIsEmail] = useState(false)
+  const [isPassword, setIsPassword] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+
+  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const {name, value} = e.target
+    setUser({...user, [name]: value})
+  }
+
+  const submitHandler = (e: FormEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    if (!user.email) {
+      setIsEmail(true)
+      if (!user.password) {
+        setIsPassword(true)
+      }
+      return
+    }
+    setIsEmail(false)
+    setIsPassword(false)
+  }
 
   return (
     <Flex
@@ -38,19 +64,36 @@ export default function LoginPage() {
           </Text>
         </Stack>
         <Box
+          as='form'
           rounded={'lg'}
           bg={useColorModeValue('white', 'gray.700')}
           boxShadow={'lg'}
-          p={8}>
+          p={8}
+          onSubmit={submitHandler}>
           <Stack spacing={4}>
             <FormControl id="email">
               <FormLabel>Email address</FormLabel>
-              <Input type="email" />
+              <Input
+                type="email"
+                name="email"
+                isInvalid={isEmail}
+                errorBorderColor='red.500'
+                placeholder='Enter Your Email:'
+                value={user.email}
+                onChange={onChangeHandler}/>
+                {isEmail ? <FormHelperText color={'red.500'}>Email is required.</FormHelperText> : null}
             </FormControl>
-            <FormControl id="password" isRequired>
+            <FormControl id="password">
               <FormLabel>Password</FormLabel>
               <InputGroup>
-                <Input type={showPassword ? 'text' : 'password'} />
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  name={'password'}
+                  isInvalid={isPassword}
+                  errorBorderColor='red.500'
+                  placeholder='Enter Your Password:'
+                  value={user.password}
+                  onChange={onChangeHandler}/>
                 <InputRightElement h={'full'}>
                   <Button
                     variant={'ghost'}
@@ -59,6 +102,7 @@ export default function LoginPage() {
                   </Button>
                 </InputRightElement>
               </InputGroup>
+              {isPassword ? <FormHelperText color={'red.500'}>Password is required.</FormHelperText> : null}
             </FormControl>
             <Stack spacing={10}>
               <Stack
@@ -69,11 +113,12 @@ export default function LoginPage() {
                 <Text color={'blue.400'}>Forgot password?</Text>
               </Stack>
               <Button
-                bg={'blue.400'}
+                bg={isEmail || isPassword ? 'red.400' : 'blue.400'}
                 color={'white'}
                 _hover={{
-                  bg: 'blue.500',
-                }}>
+                  bg: isEmail || isPassword ? 'red.600' : 'blue.600',
+                }}
+                type='submit'>
                 Sign in
               </Button>
             </Stack>

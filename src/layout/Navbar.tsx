@@ -10,7 +10,7 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
-  useDisclosure,
+  // useDisclosure,
   useColorModeValue,
   Stack,
   useColorMode,
@@ -24,17 +24,15 @@ import { Link as RouterLink } from 'react-router-dom'
 interface Props {
   children: React.ReactNode
   to: string
-  key?: string | number
 }
 
 const Links = ['Home', 'Dashboard', 'products']
 
 const NavLink = (props: Props) => {
-  const { children, to, key } = props
+  const { children, to } = props
 
   return (
     <Link
-      key={key}
       as={RouterLink}
       to={to}
       px={2}
@@ -52,7 +50,7 @@ const NavLink = (props: Props) => {
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  // const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
