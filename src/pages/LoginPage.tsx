@@ -37,12 +37,16 @@ export default function LoginPage() {
 
   const submitHandler = (e: FormEvent<HTMLInputElement>) => {
     e.preventDefault()
+    if (!user.email && !user.password) {
+      setIsEmail(true)
+      setIsPassword(true)
+      return
+    }
     if (!user.email) {
       setIsEmail(true)
-      if (!user.password) {
-        setIsPassword(true)
-      }
-      return
+    }
+    if (!user.password) {
+      setIsPassword(true)
     }
     setIsEmail(false)
     setIsPassword(false)
