@@ -72,6 +72,8 @@ export default function Navbar() {
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
 
+              <NavLink to={"/login"} key={"login"}>{'Login'}</NavLink>
+
               <Menu>
                 <MenuButton
                   as={Button}
