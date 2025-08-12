@@ -72,8 +72,6 @@ export const loginSlice = createSlice({
         })
       })
       .addCase(userLogin.rejected, (state, action) => {
-        console.log(action);
-        
         state.loading = false
         state.data = null
         state.error = action.payload || 'Unknown Error'
