@@ -76,6 +76,7 @@ export default function Navbar() {
               <Button onClick={toggleColorMode}>
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
+              <Button onClick={() => {}}>Cart (0)</Button>
               {token? 
               <Menu>
                 <MenuButton
