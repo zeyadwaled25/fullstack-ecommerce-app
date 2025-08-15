@@ -21,6 +21,9 @@ import axios from "axios";
 import ProductDetailsSkeleton from "../components/ProductDetailsSkeleton";
 import { useQuery } from "react-query";
 import { formattedPrice } from "../utils";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../app/features/cart/cartSlice";
+import type { IProduct } from "../interfaces";
 
 const ProductPage = () => {
   const { id, documentId } = useParams();
@@ -41,6 +44,11 @@ const ProductPage = () => {
   useEffect(() => {
     document.title = `Product ${data?.data?.title} Page`;
   }, []);
+
+  const dispatch = useDispatch()
+  const addToCartHandler = () => {
+    dispatch(addToCart(data.data))
+  }
 
   if (isLoading)
     return (
@@ -102,7 +110,7 @@ const ProductPage = () => {
           <Button
             variant="solid"
             colorScheme="purple"
-            onClick={() => {}}
+            onClick={addToCartHandler}
             w="full"
             size="lg"
             bg={colorMode === "light" ? "#e6f3fd" : "#9f7aea"}
