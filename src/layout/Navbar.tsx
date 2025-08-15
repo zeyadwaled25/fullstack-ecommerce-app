@@ -21,8 +21,9 @@ import {
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { Link as RouterLink } from 'react-router-dom'
 import CookieService from "../services/CookieService";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectCart } from '../app/features/cart/cartSlice';
+import { onOpenCartDrawer } from '../app/features/globalSlice';
 
 interface Props {
   children: React.ReactNode
@@ -61,6 +62,11 @@ export default function Navbar() {
   }
 
   const {cartProducts} = useSelector(selectCart)
+  const dispatch = useDispatch()
+
+  const onOpen = () => {
+    dispatch(onOpenCartDrawer())
+  }
 
   return (
     <>
@@ -80,7 +86,7 @@ export default function Navbar() {
               <Button onClick={toggleColorMode}>
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
-              <Button onClick={() => {}}>Cart ({cartProducts.length})</Button>
+              <Button onClick={onOpen}>Cart ({cartProducts.length})</Button>
               {token? 
               <Menu>
                 <MenuButton

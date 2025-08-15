@@ -23,7 +23,6 @@ import { useQuery } from "react-query";
 import { formattedPrice } from "../utils";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../app/features/cart/cartSlice";
-import type { IProduct } from "../interfaces";
 
 const ProductPage = () => {
   const { id, documentId } = useParams();

@@ -5,12 +5,14 @@ import ProductPage from "./pages/SingelProduct";
 import LoginPage from "./pages/LoginPage";
 import AppLayout from "./layout/AppLayout";
 import CookieService from "./services/CookieService";
+import CartDrawer from "./components/CartDrawer";
 
 const App = () => {
   const token = CookieService.get('jwt');
 
   return (
     <>
+      <CartDrawer />
       <Routes>
         <Route path="/" element={<AppLayout/>}>
           <Route index element={<HomePage/>}/>
