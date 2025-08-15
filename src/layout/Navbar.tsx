@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react'
 import { MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { Link as RouterLink } from 'react-router-dom'
+import CookieService from "../services/CookieService";
 
 interface Props {
   children: React.ReactNode
@@ -50,7 +51,13 @@ const NavLink = (props: Props) => {
 
 export default function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode()
-  // const { isOpen, onOpen, onClose } = useDisclosure()
+  const token = CookieService.get('jwt');
+
+  const logoutHandler = () => {
+    CookieService.remove('jwt')
+    window.location.reload()
+  }
+
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -65,13 +72,11 @@ export default function Navbar() {
           </HStack>
 
           <Flex alignItems={'center'}>
-            <Stack direction={'row'} spacing={7}>
+            <Stack direction={'row'} spacing={4}>
               <Button onClick={toggleColorMode}>
                 {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
               </Button>
-
-              <NavLink to={"/login"} key={"login"}>{'Login'}</NavLink>
-
+              {token? 
               <Menu>
                 <MenuButton
                   as={Button}
@@ -100,9 +105,13 @@ export default function Navbar() {
                   <MenuDivider />
                   <MenuItem>Your Servers</MenuItem>
                   <MenuItem>Account Settings</MenuItem>
-                  <MenuItem>Logout</MenuItem>
+                  <MenuItem onClick={logoutHandler}>Logout</MenuItem>
                 </MenuList>
               </Menu>
+              : 
+              <HStack as={'nav'} spacing={4} display={{base: "none", md: "flex"}}>
+                <NavLink to={"/login"} key={"login"}>{'Login'}</NavLink>
+              </HStack>}
             </Stack>
           </Flex>
         </Flex>

@@ -64,7 +64,7 @@ export default function LoginPage({isAuthenticated}: IProps) {
   }
 
   // protected route
-  if (isAuthenticated) return <Navigate to={"/"} replace/>
+  if (isAuthenticated) return <Navigate to={-1} replace/>
 
   return (
     <Flex
