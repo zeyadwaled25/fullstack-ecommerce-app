@@ -22,8 +22,13 @@ import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectLogin, userLogin } from '../app/features/login/loginSlice'
 import type { AppDispatch } from '../app/store'
+import { Navigate } from 'react-router-dom'
 
-export default function LoginPage() {
+interface IProps {
+  isAuthenticated: boolean
+}
+
+export default function LoginPage({isAuthenticated}: IProps) {
   const dispatch = useDispatch<AppDispatch>()
   const {loading} = useSelector(selectLogin)
 
@@ -57,6 +62,9 @@ export default function LoginPage() {
     setIsPassword(false)
     dispatch(userLogin(user))
   }
+
+  // protected route
+  if (isAuthenticated) return <Navigate to={"/"} replace/>
 
   return (
     <Flex

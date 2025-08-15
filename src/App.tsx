@@ -4,8 +4,11 @@ import ProductsPage from "./pages/Products";
 import ProductPage from "./pages/SingelProduct";
 import LoginPage from "./pages/LoginPage";
 import AppLayout from "./layout/AppLayout";
+import CookieService from "./services/CookieService";
 
 const App = () => {
+  const token = CookieService.get('jwt');
+
   return (
     <>
       <Routes>
@@ -15,7 +18,7 @@ const App = () => {
           <Route path="/products/:documentId" element={<ProductPage/>}/>
         </Route>
 
-        <Route path="/login" element={<LoginPage/>}/>
+        <Route path="/login" element={<LoginPage isAuthenticated={token}/>}/>
       </Routes>
     </>
   );
