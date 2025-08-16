@@ -1,9 +1,9 @@
-import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay } from "@chakra-ui/react";
+import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Text } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { onCloseCartDrawer, selectGlobal } from "../app/features/globalSlice";
 import { useRef } from "react";
 import CartDrawerItem from "./CartDrawerItem";
-import { selectCart } from "../app/features/cart/cartSlice";
+import { clearCart, selectCart } from "../app/features/cart/cartSlice";
 
 const CartDrawer = () => {
   const {isOpenCartDrawer} = useSelector(selectGlobal)
@@ -29,14 +29,14 @@ const CartDrawer = () => {
 
           <DrawerBody>
             {
-              cartProducts.map(item => (
+              cartProducts.length ? cartProducts.map(item => (
                 <CartDrawerItem key={item.id} {...item} />
-              ))
+              )) : <Text>Your cart is empty</Text>
             }
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant='outline' colorScheme="red" mr={3} onClick={() => {}}>
+            <Button variant='outline' colorScheme="red" mr={3} onClick={() => {dispatch(clearCart())}}>
               Clear All
             </Button>
           </DrawerFooter>
