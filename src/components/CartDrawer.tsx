@@ -1,10 +1,13 @@
-import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Input } from "@chakra-ui/react";
+import { Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { onCloseCartDrawer, selectGlobal } from "../app/features/globalSlice";
 import { useRef } from "react";
+import CartDrawerItem from "./CartDrawerItem";
+import { selectCart } from "../app/features/cart/cartSlice";
 
 const CartDrawer = () => {
   const {isOpenCartDrawer} = useSelector(selectGlobal)
+  const {cartProducts} = useSelector(selectCart)
   const dispatch = useDispatch();
   const btnRef = useRef(null)
 
@@ -25,7 +28,11 @@ const CartDrawer = () => {
           <DrawerHeader>Create your account</DrawerHeader>
 
           <DrawerBody>
-            <Input placeholder='Type here...' />
+            {
+              cartProducts.map(item => (
+                <CartDrawerItem key={item.id} {...item} />
+              ))
+            }
           </DrawerBody>
 
           <DrawerFooter>
