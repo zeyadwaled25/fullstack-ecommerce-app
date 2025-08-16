@@ -19,4 +19,5 @@ export interface IProduct {
     documentId?: string;
     title: string;
   };
+  quantity?: number
 }
