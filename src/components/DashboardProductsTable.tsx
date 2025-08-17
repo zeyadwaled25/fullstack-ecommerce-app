@@ -1,6 +1,8 @@
 import { Table, TableCaption, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
+import DashboardProductsTableSkeleton from "./DashboardProductsTableSkeleton";
 
 const DashboardProductsTable = () => {
+  return <DashboardProductsTableSkeleton />;
   return (
     <TableContainer>
     <Table variant='simple'>
