@@ -8,6 +8,7 @@ import CookieService from "./services/CookieService";
 import CartDrawer from "./components/CartDrawer";
 import DashboardLayout from "./pages/dashboard/DashboardLayout";
 import AdminDashboard from "./pages/dashboard";
+import DashboardProducts from "./pages/dashboard/DashboardProducts";
 
 const App = () => {
   const token = CookieService.get('jwt');
@@ -23,7 +24,7 @@ const App = () => {
         </Route>
         <Route path="/dashboard" element={<DashboardLayout/>}>
           <Route index element={<AdminDashboard/>}/>
-          <Route path="products" element={<h1>Hi Products</h1>}/>
+          <Route path="products" element={<DashboardProducts />}/>
           <Route path="categories" element={<h1>Hi Categories</h1>}/>
         </Route>
 
