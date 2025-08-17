@@ -80,7 +80,13 @@ const DashboardProductsTable = () => {
           </Tfoot>
         </Table>
       </TableContainer>
-      <CustomAlertDialog isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+      <CustomAlertDialog
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        title="Are You Sure?"
+        description="Do you really want to destroy this product? this product cannot br undone."
+      />
     </>
   );
 };

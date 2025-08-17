@@ -4,10 +4,14 @@ import { useRef } from "react"
 interface IProps {
   isOpen: boolean,
   onOpen: () => void,
-  onClose: () => void
+  onClose: () => void,
+  title: string,
+  description: string,
+  cancelTxt?: string,
+  okTxt?: string,
 }
 
-export default function CustomAlertDialog({isOpen, onOpen, onClose}: IProps) {
+export default function CustomAlertDialog({isOpen, onClose, title, description, cancelTxt= "Cancel", okTxt= "Ok"}: IProps) {
   const cancelRef = useRef(null)
 
   return (
@@ -20,19 +24,19 @@ export default function CustomAlertDialog({isOpen, onOpen, onClose}: IProps) {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              Delete Customer
+              {title}
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure? You can't undo this action afterwards.
+              {description}
             </AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>
-                Cancel
+                {cancelTxt}
               </Button>
               <Button colorScheme='red' onClick={onClose} ml={3}>
-                Delete
+                {okTxt}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
