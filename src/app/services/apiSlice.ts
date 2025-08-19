@@ -14,6 +14,13 @@ export const apiSlice = createApi({
           url: `/api/products?fields=title,description,price,stock&populate=*&sort=createdAt:DESC`
         }
       },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.data.map(({ id }: {id: number | string}) => ({ type: 'Products' as const, id })),
+              { type: 'Products', id: 'LIST' },
+            ]
+          : [{ type: 'Products', id: 'LIST' }],
     }),
     deleteDashboardProducts: build.mutation({
       query(documentId) {
@@ -24,7 +31,8 @@ export const apiSlice = createApi({
             Authorization: `Bearer ${CookieService.get('jwt')}`
           }
         }
-      }
+      },
+      invalidatesTags: [{ type: 'Products', id: 'LIST' }],
     })
   }),
 })
