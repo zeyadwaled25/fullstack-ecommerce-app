@@ -2,7 +2,7 @@ import {
   Table, TableCaption, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr, Image, 
   HStack, Button, useDisclosure 
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardProductsTableSkeleton from "./DashboardProductsTableSkeleton";
 import { useDeleteDashboardProductsMutation, useGetDashboardProductsQuery } from "../app/services/apiSlice";
 import type { IProduct } from "../interfaces";
@@ -11,8 +11,13 @@ import CustomAlertDialog from "../shared/AlertDialog";
 const DashboardProductsTable = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isLoading, data, error } = useGetDashboardProductsQuery(undefined);
-  const [destroyProduct] = useDeleteDashboardProductsMutation();
+  const [destroyProduct, {isLoading: isDestroying, isSuccess}] = useDeleteDashboardProductsMutation();
   const [selectedDid, setSelectedDid] = useState<string>("");
+
+  useEffect(() => {
+    setSelectedDid('')
+    onClose()
+  }, [isSuccess])
 
   if (isLoading) return <DashboardProductsTableSkeleton />;
   if (error) return <p>Error loading products</p>;
@@ -21,7 +26,7 @@ const DashboardProductsTable = () => {
     <>
       <TableContainer maxW={'85%'} mx={'auto'}>
         <Table variant="simple">
-          <TableCaption>All Products Dashboard</TableCaption>
+          <TableCaption>Total Entries: {data?.data?.length ?? 0}</TableCaption>
           <Thead>
             <Tr>
               <Th>ID</Th>
@@ -95,6 +100,7 @@ const DashboardProductsTable = () => {
         description="Do you really want to destroy this product? This action cannot be undone."
         onOkHandler={(id) => destroyProduct(id)}
         deleteId={selectedDid}
+        isLoading={isDestroying}
       />
     </>
   );

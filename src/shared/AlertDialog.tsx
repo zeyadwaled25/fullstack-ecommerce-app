@@ -18,6 +18,7 @@ interface IProps {
   okTxt?: string,
   onOkHandler: (dID: string) => void,
   deleteId: string,
+  isLoading: boolean
 }
 
 export default function CustomAlertDialog({
@@ -28,7 +29,8 @@ export default function CustomAlertDialog({
   cancelTxt = "Cancel",
   okTxt = "Ok",
   onOkHandler,
-  deleteId
+  deleteId,
+  isLoading
 }: IProps) {
   const cancelRef = useRef(null)
 
@@ -56,6 +58,7 @@ export default function CustomAlertDialog({
               colorScheme='red' 
               ml={3}
               onClick={() => onOkHandler(deleteId)}
+              isLoading={isLoading}
             >
               {okTxt}
             </Button>
