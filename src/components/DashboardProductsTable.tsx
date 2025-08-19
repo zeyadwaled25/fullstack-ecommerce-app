@@ -1,15 +1,25 @@
 import { 
   Table, TableCaption, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr, Image, 
-  HStack, Button, useDisclosure 
+  HStack, Button, useDisclosure, 
+  FormControl,
+  FormLabel,
+  Input,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import DashboardProductsTableSkeleton from "./DashboardProductsTableSkeleton";
 import { useDeleteDashboardProductsMutation, useGetDashboardProductsQuery } from "../app/services/apiSlice";
 import type { IProduct } from "../interfaces";
 import CustomAlertDialog from "../shared/AlertDialog";
+import CustomModal from "../shared/Modal";
 
 const DashboardProductsTable = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure()
   const { isLoading, data, error } = useGetDashboardProductsQuery(undefined);
   const [destroyProduct, {isLoading: isDestroying, isSuccess}] = useDeleteDashboardProductsMutation();
   const [selectedDid, setSelectedDid] = useState<string>("");
@@ -60,7 +70,11 @@ const DashboardProductsTable = () => {
                     <Button size="sm" colorScheme="blue" variant="outline">
                       View
                     </Button>
-                    <Button size="sm" colorScheme="yellow" variant="outline">
+                    <Button size="sm" colorScheme="yellow" variant="outline"
+                      onClick={() => {
+                        onModalOpen()
+                      }}
+                    >
                       Edit
                     </Button>
                     <Button 
@@ -93,6 +107,7 @@ const DashboardProductsTable = () => {
         </Table>
       </TableContainer>
 
+      {/* Alert Dialog */}
       <CustomAlertDialog
         isOpen={isOpen}
         onClose={onClose}
@@ -102,6 +117,23 @@ const DashboardProductsTable = () => {
         deleteId={selectedDid}
         isLoading={isDestroying}
       />
+      {/* Edit Modal */}
+      <CustomModal isOpen={isModalOpen} onClose={onModalClose} title="Update Product" >
+        <FormControl>
+          <FormLabel>Title</FormLabel>
+          <Input placeholder='Product Title...' />
+        </FormControl>
+        <FormControl my={3}>
+          <FormLabel>Price</FormLabel>
+          <NumberInput defaultValue={15} precision={2} step={0.2}>
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </FormControl>
+      </CustomModal>
     </>
   );
 };
