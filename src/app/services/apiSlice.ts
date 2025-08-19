@@ -25,4 +25,4 @@ export const apiSlice = createApi({
   }),
 })
 
-export const { useGetDashboardProductsQuery } = apiSlice
+export const { useGetDashboardProductsQuery, useDeleteDashboardProductsMutation } = apiSlice

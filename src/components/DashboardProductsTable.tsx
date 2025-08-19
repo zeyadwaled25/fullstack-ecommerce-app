@@ -1,17 +1,18 @@
 import { 
   Table, TableCaption, TableContainer, Tbody, Td, Tfoot, Th, Thead, Tr, Image, 
-  HStack,
-  Button,
-  useDisclosure
+  HStack, Button, useDisclosure 
 } from "@chakra-ui/react";
+import { useState } from "react";
 import DashboardProductsTableSkeleton from "./DashboardProductsTableSkeleton";
-import { useGetDashboardProductsQuery } from "../app/services/apiSlice";
+import { useDeleteDashboardProductsMutation, useGetDashboardProductsQuery } from "../app/services/apiSlice";
 import type { IProduct } from "../interfaces";
 import CustomAlertDialog from "../shared/AlertDialog";
 
 const DashboardProductsTable = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isLoading, data, error } = useGetDashboardProductsQuery(undefined);
+  const [destroyProduct] = useDeleteDashboardProductsMutation();
+  const [selectedDid, setSelectedDid] = useState<string>("");
 
   if (isLoading) return <DashboardProductsTableSkeleton />;
   if (error) return <p>Error loading products</p>;
@@ -57,8 +58,14 @@ const DashboardProductsTable = () => {
                     <Button size="sm" colorScheme="yellow" variant="outline">
                       Edit
                     </Button>
-                    <Button size="sm" colorScheme="red" variant="outline"
-                      onClick={onOpen}
+                    <Button 
+                      size="sm" 
+                      colorScheme="red" 
+                      variant="outline"
+                      onClick={() => {
+                        setSelectedDid(product.documentId)
+                        onOpen()
+                      }}
                     >
                       Delete
                     </Button>
@@ -80,12 +87,14 @@ const DashboardProductsTable = () => {
           </Tfoot>
         </Table>
       </TableContainer>
+
       <CustomAlertDialog
         isOpen={isOpen}
-        onOpen={onOpen}
         onClose={onClose}
         title="Are You Sure?"
-        description="Do you really want to destroy this product? this product cannot br undone."
+        description="Do you really want to destroy this product? This action cannot be undone."
+        onOkHandler={(id) => destroyProduct(id)}
+        deleteId={selectedDid}
       />
     </>
   );
