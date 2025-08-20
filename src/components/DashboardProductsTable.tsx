@@ -74,6 +74,20 @@ const DashboardProductsTable = () => {
   const onSubmitHandler = () => {
     console.log(productToEdit);
     console.log(thumbnail);
+
+    const formData = new FormData();
+    formData.append('data', JSON.stringify({
+      title: productToEdit.title,
+      description: productToEdit.description,
+      price: productToEdit.price,
+      stock: productToEdit.stock,
+      category: {
+        title: productToEdit.category
+      },
+    }))
+    if (thumbnail) {
+      formData.append('files.thumbnail', thumbnail);
+    }
   }
 
   useEffect(() => {
