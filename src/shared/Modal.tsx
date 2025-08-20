@@ -9,9 +9,10 @@ interface IProps {
   okTxt?: string,
   children: ReactNode
   initialRef: RefObject<null>
+  onOkClick: () => void
 }
 
-const CustomModal = ({isOpen, onClose, children, title, cancelTxt = "Cancel", okTxt = "Done", initialRef}: IProps) => {
+const CustomModal = ({isOpen, onClose, children, title, cancelTxt = "Cancel", okTxt = "Done", initialRef, onOkClick}: IProps) => {
   return (
     <Modal
       initialFocusRef={initialRef}
@@ -33,7 +34,7 @@ const CustomModal = ({isOpen, onClose, children, title, cancelTxt = "Cancel", ok
           <Button mr={3} onClick={onClose}>
             {cancelTxt}
           </Button>
-          <Button colorScheme='blue'>{okTxt}</Button>
+          <Button colorScheme='blue' onClick={onOkClick}>{okTxt}</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

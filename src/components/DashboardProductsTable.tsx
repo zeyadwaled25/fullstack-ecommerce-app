@@ -20,6 +20,7 @@ import CustomModal from "../shared/Modal";
 
 const DashboardProductsTable = () => {
   const [selectedDid, setSelectedDid] = useState<string>("");
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [productToEdit, setProductToEdit] = useState<IProduct>({
     id: 0,
     documentId: "",
@@ -63,6 +64,16 @@ const DashboardProductsTable = () => {
       ...prev,
       stock: valueAsNumber,
     }));
+  }
+  const onChangeThumbnailHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setThumbnail(file);
+    }
+  }
+  const onSubmitHandler = () => {
+    console.log(productToEdit);
+    console.log(thumbnail);
   }
 
   useEffect(() => {
@@ -166,7 +177,14 @@ const DashboardProductsTable = () => {
         isLoading={isDestroying}
       />
       {/* Edit Modal */}
-      <CustomModal isOpen={isModalOpen} onClose={onModalClose} title="Update Product" okTxt="Update" initialRef={initialRef} >
+      <CustomModal
+        isOpen={isModalOpen}
+        onClose={onModalClose}
+        title="Update Product"
+        okTxt="Update"
+        initialRef={initialRef}
+        onOkClick={onSubmitHandler}
+      >
         <FormControl>
           <FormLabel>Title</FormLabel>
           <Input
@@ -214,7 +232,7 @@ const DashboardProductsTable = () => {
           <Input
             type="file" 
             accept="image/*"
-            onChange={() => {}}
+            onChange={onChangeThumbnailHandler}
           />
         </FormControl>
       </CustomModal>
