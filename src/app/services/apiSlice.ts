@@ -1,6 +1,17 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import CookieService from '../../services/CookieService'
 
+interface IUpdateProducts {
+  title: string,
+  description: string,
+  price: number,
+  stock: number,
+  category: {
+    title: string
+  },
+  'files.thumbnail': File
+}
+
 export const apiSlice = createApi({
   reducerPath: 'pokemonApi',
   tagTypes: ['Products'],
@@ -21,6 +32,29 @@ export const apiSlice = createApi({
               { type: 'Products', id: 'LIST' },
             ]
           : [{ type: 'Products', id: 'LIST' }],
+    }),
+    updateDashboardProducts: build.mutation({
+      query: ({documentId, body}: {documentId: string, body: IUpdateProducts}) => ({
+        url: `/api/products/${documentId}`,
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${CookieService.get('jwt')}`
+        },
+        body,
+      }),
+      async onQueryStarted({ documentId, ...patch }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          apiSlice.util.updateQueryData('getDashboardProducts', documentId, (draft) => {
+            Object.assign(draft, patch)
+          })
+        )
+        try {
+          await queryFulfilled
+        } catch {
+          patchResult.undo()
+        }
+      },
+      invalidatesTags: [{ type: 'Products', id: 'LIST' }],
     }),
     deleteDashboardProducts: build.mutation({
       query(documentId) {
