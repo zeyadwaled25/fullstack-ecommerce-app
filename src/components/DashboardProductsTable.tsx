@@ -8,9 +8,10 @@ import {
   NumberInputField,
   NumberInputStepper,
   NumberIncrementStepper,
-  NumberDecrementStepper
+  NumberDecrementStepper,
+  useColorModeValue
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DashboardProductsTableSkeleton from "./DashboardProductsTableSkeleton";
 import { useDeleteDashboardProductsMutation, useGetDashboardProductsQuery } from "../app/services/apiSlice";
 import type { IProduct } from "../interfaces";
@@ -23,6 +24,9 @@ const DashboardProductsTable = () => {
   const { isLoading, data, error } = useGetDashboardProductsQuery(undefined);
   const [destroyProduct, {isLoading: isDestroying, isSuccess}] = useDeleteDashboardProductsMutation();
   const [selectedDid, setSelectedDid] = useState<string>("");
+  const initialRef = useRef(null)
+
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
 
   useEffect(() => {
     setSelectedDid('')
@@ -34,9 +38,15 @@ const DashboardProductsTable = () => {
 
   return (
     <>
-      <TableContainer maxW={'85%'} mx={'auto'}>
+      <TableContainer
+        maxW={'85%'}
+        mx={'auto'}
+        border="1px"
+        borderColor={borderColor}
+        borderRadius={5}
+      >
         <Table variant="simple">
-          <TableCaption>Total Entries: {data?.data?.length ?? 0}</TableCaption>
+          <TableCaption my={2}>Total Entries: {data?.data?.length ?? 0}</TableCaption>
           <Thead>
             <Tr>
               <Th>ID</Th>
@@ -118,10 +128,10 @@ const DashboardProductsTable = () => {
         isLoading={isDestroying}
       />
       {/* Edit Modal */}
-      <CustomModal isOpen={isModalOpen} onClose={onModalClose} title="Update Product" >
+      <CustomModal isOpen={isModalOpen} onClose={onModalClose} title="Update Product" okTxt="Update" initialRef={initialRef} >
         <FormControl>
           <FormLabel>Title</FormLabel>
-          <Input placeholder='Product Title...' />
+          <Input ref={initialRef} placeholder='Product Title...' />
         </FormControl>
         <FormControl my={3}>
           <FormLabel>Price</FormLabel>
@@ -132,6 +142,25 @@ const DashboardProductsTable = () => {
               <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
+        </FormControl>
+        <FormControl my={3}>
+          <FormLabel>Count in Stock</FormLabel>
+          <NumberInput defaultValue={15} precision={2} step={0.2}>
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </FormControl>
+        {/* ✅ File Upload Input */}
+        <FormControl my={3}>
+          <FormLabel>Thumbnail</FormLabel>
+          <Input
+            type="file" 
+            accept="image/*"
+            onChange={() => {}}
+          />
         </FormControl>
       </CustomModal>
     </>

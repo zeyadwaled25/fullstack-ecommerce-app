@@ -1,5 +1,5 @@
 import { Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import { type ReactNode, type RefObject } from "react";
 
 interface IProps {
   isOpen: boolean,
@@ -8,17 +8,21 @@ interface IProps {
   cancelTxt?: string,
   okTxt?: string,
   children: ReactNode
+  initialRef: RefObject<null>
 }
 
-const CustomModal = ({isOpen, onClose, children, title, cancelTxt = "Cancel", okTxt = "Done"}: IProps) => {
+const CustomModal = ({isOpen, onClose, children, title, cancelTxt = "Cancel", okTxt = "Done", initialRef}: IProps) => {
   return (
     <Modal
-        isCentered
-        onClose={onClose}
-        isOpen={isOpen}
-        motionPreset='slideInBottom'
-      >
-      <ModalOverlay />
+      initialFocusRef={initialRef}
+      isCentered
+      onClose={onClose}
+      isOpen={isOpen}
+      motionPreset='slideInBottom'
+    >
+      <ModalOverlay
+        bg='blackAlpha.500'
+        backdropFilter='blur(10px) hue-rotate(22deg)' />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
