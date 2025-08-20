@@ -7,12 +7,13 @@ interface IProps {
   title: string,
   cancelTxt?: string,
   okTxt?: string,
-  children: ReactNode
-  initialRef: RefObject<null>
-  onOkClick: () => void
+  children: ReactNode,
+  initialRef: RefObject<null>,
+  onOkClick: () => void,
+  isLoading: boolean,
 }
 
-const CustomModal = ({isOpen, onClose, children, title, cancelTxt = "Cancel", okTxt = "Done", initialRef, onOkClick}: IProps) => {
+const CustomModal = ({isOpen, onClose, children, title, cancelTxt = "Cancel", okTxt = "Done", initialRef, onOkClick, isLoading}: IProps) => {
   return (
     <Modal
       initialFocusRef={initialRef}
@@ -34,7 +35,7 @@ const CustomModal = ({isOpen, onClose, children, title, cancelTxt = "Cancel", ok
           <Button mr={3} onClick={onClose}>
             {cancelTxt}
           </Button>
-          <Button colorScheme='blue' onClick={onOkClick}>{okTxt}</Button>
+          <Button colorScheme='blue' onClick={onOkClick} isLoading={isLoading}>{okTxt}</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

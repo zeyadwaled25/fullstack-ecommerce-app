@@ -9,11 +9,12 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
-  useColorModeValue
+  useColorModeValue,
+  Textarea,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import DashboardProductsTableSkeleton from "./DashboardProductsTableSkeleton";
-import { useDeleteDashboardProductsMutation, useGetDashboardProductsQuery } from "../app/services/apiSlice";
+import { useDeleteDashboardProductsMutation, useGetDashboardProductsQuery, useUpdateDashboardProductsMutation } from "../app/services/apiSlice";
 import type { IProduct } from "../interfaces";
 import CustomAlertDialog from "../shared/AlertDialog";
 import CustomModal from "../shared/Modal";
@@ -40,12 +41,13 @@ const DashboardProductsTable = () => {
   const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure()
   const { isLoading, data, error } = useGetDashboardProductsQuery(undefined);
   const [destroyProduct, {isLoading: isDestroying, isSuccess}] = useDeleteDashboardProductsMutation();
+  const [updateProduct, {isLoading: isUpdating, isSuccess: isUpdatingSuccess}] = useUpdateDashboardProductsMutation();
   const initialRef = useRef(null)
 
   const borderColor = useColorModeValue('gray.200', 'gray.700');
 
   // Handler
-  const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+  const onChangeHandler = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {name, value} = e.target
 
     setProductToEdit((prev) => ({
@@ -72,28 +74,52 @@ const DashboardProductsTable = () => {
     }
   }
   const onSubmitHandler = () => {
-    console.log(productToEdit);
-    console.log(thumbnail);
-
-    const formData = new FormData();
-    formData.append('data', JSON.stringify({
+    const payload = {
       title: productToEdit.title,
       description: productToEdit.description,
       price: productToEdit.price,
       stock: productToEdit.stock,
-      category: {
-        title: productToEdit.category
-      },
-    }))
-    if (thumbnail) {
-      formData.append('files.thumbnail', thumbnail);
     }
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(payload));
+
+    if (thumbnail) {
+      formData.append("files.thumbnail", thumbnail);
+    }
+
+    updateProduct({ documentId: selectedDid, body: formData });
+  }
+
+  const handleModalClose = () => {
+    setThumbnail(null);
+    setProductToEdit({
+      id: 0,
+      documentId: "",
+      title: "",
+      description: "",
+      price: 0,
+      stock: 0,
+      category: {
+        title: ""
+      },
+      thumbnail: {
+        url: ""
+      },
+      quantity: 0
+    });
+    onModalClose();
   }
 
   useEffect(() => {
-    setSelectedDid('')
-    onClose()
-  }, [isSuccess])
+    if (isSuccess) {
+      setSelectedDid('')
+      onClose()
+    }
+    if (isUpdatingSuccess) {
+      setSelectedDid('')
+      onModalClose()
+    }
+  }, [isSuccess, isUpdatingSuccess])
 
   if (isLoading) return <DashboardProductsTableSkeleton />;
   if (error) return <p>Error loading products</p>;
@@ -144,6 +170,7 @@ const DashboardProductsTable = () => {
                     </Button>
                     <Button size="sm" colorScheme="yellow" variant="outline"
                       onClick={() => {
+                        setSelectedDid(product.documentId)
                         setProductToEdit(product)
                         onModalOpen()
                       }}
@@ -193,11 +220,12 @@ const DashboardProductsTable = () => {
       {/* Edit Modal */}
       <CustomModal
         isOpen={isModalOpen}
-        onClose={onModalClose}
+        onClose={handleModalClose}
         title="Update Product"
         okTxt="Update"
         initialRef={initialRef}
         onOkClick={onSubmitHandler}
+        isLoading={isUpdating}
       >
         <FormControl>
           <FormLabel>Title</FormLabel>
@@ -206,6 +234,15 @@ const DashboardProductsTable = () => {
             ref={initialRef}
             placeholder='Product Title...'
             value={productToEdit.title}
+            onChange={onChangeHandler}
+          />
+        </FormControl>
+        <FormControl my={3}>
+          <FormLabel>Description</FormLabel>
+          <Textarea
+            name="description"
+            placeholder='Product Description...'
+            value={productToEdit.description}
             onChange={onChangeHandler}
           />
         </FormControl>
@@ -230,8 +267,8 @@ const DashboardProductsTable = () => {
           <NumberInput
             name="stock"
             defaultValue={productToEdit.stock}
-            precision={2}
-            step={0.2}
+            min={0}
+            step={1}
             onChange={onChangeStockHandler}
           >
             <NumberInputField />
@@ -245,6 +282,7 @@ const DashboardProductsTable = () => {
           <FormLabel>Thumbnail</FormLabel>
           <Input
             type="file" 
+            name="thumbnail"
             accept="image/*"
             onChange={onChangeThumbnailHandler}
           />

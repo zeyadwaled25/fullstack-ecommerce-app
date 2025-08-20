@@ -1,17 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import CookieService from '../../services/CookieService'
 
-interface IUpdateProducts {
-  title: string,
-  description: string,
-  price: number,
-  stock: number,
-  category: {
-    title: string
-  },
-  'files.thumbnail': File
-}
-
 export const apiSlice = createApi({
   reducerPath: 'pokemonApi',
   tagTypes: ['Products'],
@@ -34,11 +23,11 @@ export const apiSlice = createApi({
           : [{ type: 'Products', id: 'LIST' }],
     }),
     updateDashboardProducts: build.mutation({
-      query: ({documentId, body}: {documentId: string, body: IUpdateProducts}) => ({
+      query: ({documentId, body}) => ({
         url: `/api/products/${documentId}`,
         method: 'PUT',
         headers: {
-          Authorization: `Bearer ${CookieService.get('jwt')}`
+          Authorization: `Bearer ${CookieService.get('jwt')}`,
         },
         body,
       }),
@@ -71,4 +60,4 @@ export const apiSlice = createApi({
   }),
 })
 
-export const { useGetDashboardProductsQuery, useDeleteDashboardProductsMutation } = apiSlice
+export const { useGetDashboardProductsQuery, useDeleteDashboardProductsMutation, useUpdateDashboardProductsMutation } = apiSlice
