@@ -74,14 +74,12 @@ const DashboardProductsTable = () => {
     }
   }
   const onSubmitHandler = () => {
-    const payload = {
-      title: productToEdit.title,
-      description: productToEdit.description,
-      price: productToEdit.price,
-      stock: productToEdit.stock,
-    }
     const formData = new FormData();
-    formData.append("data", JSON.stringify(payload));
+
+    formData.append("data[title]", productToEdit.title);
+    formData.append("data[description]", productToEdit.description);
+    formData.append("data[price]", (productToEdit.price ?? 0).toString());
+    formData.append("data[stock]", (productToEdit.stock ?? 0).toString());
 
     if (thumbnail) {
       formData.append("files.thumbnail", thumbnail);
