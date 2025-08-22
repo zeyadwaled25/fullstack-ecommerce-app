@@ -2,6 +2,11 @@ export interface IProductResponse {
   data: IProduct[];
 }
 
+export interface ICategory {
+  id?: number;
+  documentId?: string;
+  title: string;
+}
 export interface IProduct {
   id: number;
   documentId: string;
@@ -14,10 +19,6 @@ export interface IProduct {
     width?: number;
     height?: number;
   };
-  category: {
-    id?: number;
-    documentId?: string;
-    title: string;
-  };
-  quantity?: number
+  category: ICategory;
+  quantity?: number;
 }

@@ -3,6 +3,11 @@ import { Box, Flex, Skeleton, Stack } from "@chakra-ui/react";
 const DashboardProductsTableSkeleton = () => {
   return (
     <Stack maxW="85%" mx="auto" my={10}>
+      <Box display="flex" justifyContent="space-between" mb={6}>
+        <Skeleton height="35px" width="120px" borderRadius="md" />
+        <Skeleton height="35px" width="150px" borderRadius="md" />
+      </Box>
+
       {Array.from({ length: 10 }).map((_, idx) => (
         <Flex
           key={idx}
