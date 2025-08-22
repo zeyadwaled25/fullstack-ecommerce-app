@@ -11,6 +11,7 @@ import {
   NumberDecrementStepper,
   useColorModeValue,
   Textarea,
+  Heading,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import DashboardProductsTableSkeleton from "./DashboardProductsTableSkeleton";
@@ -124,16 +125,26 @@ const DashboardProductsTable = () => {
 
   return (
     <>
+      <HStack
+        maxW="95%"
+        mx="auto"
+        justify="space-between"
+        mb={6}
+      >
+        <Heading size="lg">Products</Heading>
+        <Button colorScheme="teal">+ Add Product</Button>
+      </HStack>
       <TableContainer
-        maxW={'85%'}
-        mx={'auto'}
+        maxW="95%"
+        mx="auto"
         border="1px"
         borderColor={borderColor}
-        borderRadius={5}
+        borderRadius={6}
+        overflowX="auto"
       >
-        <Table variant="simple">
+        <Table variant="simple" colorScheme='gray'>
           <TableCaption my={2}>Total Entries: {data?.data?.length ?? 0}</TableCaption>
-          <Thead>
+          <Thead bg="gray.200" _dark={{ bg: "gray.700" }}>
             <Tr>
               <Th>ID</Th>
               <Th>Thumbnail</Th>
@@ -146,8 +157,8 @@ const DashboardProductsTable = () => {
           </Thead>
           <Tbody>
             {data?.data?.map((product: IProduct, idx: number) => (
-              <Tr key={product.id}>
-                <Td>{idx}</Td>
+              <Tr key={product.id} _hover={{ bg: borderColor }} cursor="pointer">
+                <Td>{idx + 1}</Td>
                 <Td>
                   <Image
                     src={`${import.meta.env.VITE_SERVER_URL}${product.thumbnail.url}`}
@@ -191,7 +202,7 @@ const DashboardProductsTable = () => {
               </Tr>
             ))}
           </Tbody>
-          <Tfoot>
+          <Tfoot bg="gray.200" _dark={{ bg: "gray.700" }} borderBottom="1px" borderColor={borderColor}>
             <Tr>
               <Th>ID</Th>
               <Th>Thumbnail</Th>
