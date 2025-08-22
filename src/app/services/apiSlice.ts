@@ -61,7 +61,7 @@ export const apiSlice = createApi({
   // ---------- Categories ----------
     getDashboardCategories: build.query({
       query: () => ({
-        url: `/api/categories`,
+        url: `/api/categories?sort=createdAt:DESC`,
       }),
       providesTags: (result) =>
         result
