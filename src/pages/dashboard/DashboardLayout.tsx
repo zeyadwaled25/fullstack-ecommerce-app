@@ -31,7 +31,8 @@ import {
 import type { IconType } from 'react-icons/lib'
 import { HiOutlineViewColumns } from "react-icons/hi2";
 import { BsGrid3X3 } from 'react-icons/bs';
-import { Outlet, Link as RouterLink } from 'react-router-dom';
+import { Outlet, Link as RouterLink, useLocation } from 'react-router-dom';
+import CookieService from '../../services/CookieService';
 
 interface LinkItemProps {
   to: string
@@ -54,15 +55,15 @@ interface SidebarProps extends BoxProps {
 }
 
 const LinkItems: Array<LinkItemProps> = [
-  { to:"/dashboard", name: 'Dashboard', icon: FiHome },
-  { to:"/dashboard/products", name: 'Products', icon: HiOutlineViewColumns },
-  { to:"/dashboard/categories", name: 'Categories', icon: BsGrid3X3 },
+  { to: "/dashboard", name: 'Dashboard', icon: FiHome },
+  { to: "/dashboard/products", name: 'Products', icon: HiOutlineViewColumns },
+  { to: "/dashboard/categories", name: 'Categories', icon: BsGrid3X3 },
 ]
 
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
   return (
     <Box
-      transition="3s ease"
+      transition="0.3s ease"
       bg={useColorModeValue('white', 'gray.900')}
       borderRight="1px"
       borderRightColor={useColorModeValue('gray.200', 'gray.700')}
@@ -86,6 +87,9 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 }
 
 const NavItem = ({ to, icon, children, ...rest }: NavItemProps) => {
+  const { pathname } = useLocation();
+  const isActive = pathname === to;
+
   return (
     <Box
       as={RouterLink}
@@ -98,9 +102,10 @@ const NavItem = ({ to, icon, children, ...rest }: NavItemProps) => {
         mx="4"
         borderRadius="lg"
         role="group"
-        cursor="pointer"
+        bg={isActive ? "purple.500" : "transparent"}
+        color={isActive ? "white" : "inherit"}
         _hover={{
-          bg: 'purpel.400',
+          bg: 'purple.400',
           color: 'white',
         }}
         {...rest}>
@@ -121,6 +126,11 @@ const NavItem = ({ to, icon, children, ...rest }: NavItemProps) => {
 }
 
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+  const logoutHandler = () => {
+    CookieService.remove('jwt');
+    window.location.replace('/login');
+  }
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -180,9 +190,8 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               borderColor={useColorModeValue('gray.200', 'gray.700')}>
               <MenuItem>Profile</MenuItem>
               <MenuItem>Settings</MenuItem>
-              <MenuItem>Billing</MenuItem>
               <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem onClick={logoutHandler}>Sign out</MenuItem>
             </MenuList>
           </Menu>
         </Flex>
@@ -196,7 +205,7 @@ const DashboardLayout = () => {
 
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
-      <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
+      <SidebarContent onClose={onClose} display={{ base: 'none', md: 'block' }} />
       <Drawer
         isOpen={isOpen}
         placement="left"
@@ -210,8 +219,7 @@ const DashboardLayout = () => {
       </Drawer>
       {/* mobilenav */}
       <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
-        {/* Content */}
+      <Box ml={{ base: 0, md: 60 }} p={{ base: 4, md: 8 }}>
         {<Outlet />}
       </Box>
     </Box>

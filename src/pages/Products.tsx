@@ -5,8 +5,10 @@ import type { IProductResponse, IProduct } from "../interfaces";
 import { useQuery } from "react-query";
 import ProductSkeleton from "../components/ProductCardSkeleton";
 import { ArrowBackIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
 
 const ProductsPage = () => {
+  const navigate = useNavigate();
   const getProducts = async () => {
     const {data} = await axios.get<IProductResponse>(`${import.meta.env.VITE_SERVER_URL}/api/products?fields=title,description,price,stock&populate=*&sort=createdAt:DESC`)
     return data
@@ -30,7 +32,9 @@ const ProductsPage = () => {
         mt={5}
         w={"fit-content"}
         cursor={'pointer'}
-        onClick={() => window.history.back()}
+        onClick={() => {
+          navigate(-1);
+        }}
       >
         <ArrowBackIcon /> ProductsPage
       </Text>

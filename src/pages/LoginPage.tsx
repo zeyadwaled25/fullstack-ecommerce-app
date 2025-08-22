@@ -22,13 +22,14 @@ import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectLogin, userLogin } from '../app/features/login/loginSlice'
 import type { AppDispatch } from '../app/store'
-import { Navigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 interface IProps {
   isAuthenticated: boolean
 }
 
 export default function LoginPage({isAuthenticated}: IProps) {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>()
   const {loading} = useSelector(selectLogin)
 
@@ -61,13 +62,19 @@ export default function LoginPage({isAuthenticated}: IProps) {
     setIsEmail(false)
     setIsPassword(false)
     dispatch(userLogin(user))
+    setTimeout(() => {
+      window.location.replace('/');
+    }, 2500)
   }
   
   const flexColorMode = useColorModeValue('gray.50', 'gray.800')
   const boxColorMode = useColorModeValue('white', 'gray.700')
 
   // protected route
-  if (isAuthenticated) return <Navigate to={"-1"} replace/>
+  if (isAuthenticated) {
+    navigate(-1);
+    return null;
+  }
 
   return (
     <Flex
