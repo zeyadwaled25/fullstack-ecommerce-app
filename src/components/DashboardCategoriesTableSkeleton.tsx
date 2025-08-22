@@ -2,7 +2,7 @@ import {
   Box, Flex, Skeleton, SkeletonText,
 } from "@chakra-ui/react";
 
-const DashboardCategoriesSkeleton = () => {
+const DashboardCategoriesTableSkeleton = () => {
   return (
     <Box maxW="95%" mx="auto">
       <Box display="flex" justifyContent="space-between" mb={6}>
@@ -21,4 +21,4 @@ const DashboardCategoriesSkeleton = () => {
   );
 };
 
-export default DashboardCategoriesSkeleton;
+export default DashboardCategoriesTableSkeleton;

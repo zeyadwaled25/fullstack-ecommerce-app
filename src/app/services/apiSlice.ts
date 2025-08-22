@@ -23,6 +23,17 @@ export const apiSlice = createApi({
             ]
           : [{ type: 'Products', id: 'LIST' }],
     }),
+    addDashboardProduct: build.mutation({
+      query: (body) => ({
+        url: `/api/products`,
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${CookieService.get('jwt')}`,
+        },
+        body,
+      }),
+      invalidatesTags: [{ type: 'Products', id: 'LIST' }],
+    }),
     updateDashboardProducts: build.mutation({
       query: ({documentId, body}) => ({
         url: `/api/products/${documentId}`,
@@ -111,4 +122,4 @@ export const apiSlice = createApi({
   }),
 });
 
-export const { useGetDashboardProductsQuery, useDeleteDashboardProductsMutation, useUpdateDashboardProductsMutation, useGetDashboardCategoriesQuery, useAddDashboardCategoryMutation, useUpdateDashboardCategoryMutation, useDeleteDashboardCategoryMutation } = apiSlice
+export const { useGetDashboardProductsQuery, useAddDashboardProductMutation, useDeleteDashboardProductsMutation, useUpdateDashboardProductsMutation, useGetDashboardCategoriesQuery, useAddDashboardCategoryMutation, useUpdateDashboardCategoryMutation, useDeleteDashboardCategoryMutation } = apiSlice

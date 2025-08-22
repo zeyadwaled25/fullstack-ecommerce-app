@@ -4,16 +4,16 @@ import {
 } from "@chakra-ui/react";
 import { EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useRef, useState } from "react";
-import DashboardCategoriesSkeleton from "../../components/DashboardCategoriesSkeleton";
-import CustomModal from "../../shared/Modal";
-import CustomAlertDialog from "../../shared/AlertDialog";
+import CustomModal from "../shared/Modal";
+import CustomAlertDialog from "../shared/AlertDialog";
 import {
   useGetDashboardCategoriesQuery,
   useAddDashboardCategoryMutation,
   useUpdateDashboardCategoryMutation,
   useDeleteDashboardCategoryMutation
-} from "../../app/services/apiSlice";
-import type { ICategory } from "../../interfaces";
+} from "../app/services/apiSlice";
+import type { ICategory } from "../interfaces";
+import DashboardCategoriesTableSkeleton from "./DashboardCategoriesTableSkeleton";
 
 const DashboardCategoriesTable = () => {
   const { data, isLoading, error } = useGetDashboardCategoriesQuery(undefined);
@@ -34,7 +34,7 @@ const DashboardCategoriesTable = () => {
   const addRef = useRef(null);
   const editRef = useRef(null);
 
-  if (isLoading) return <DashboardCategoriesSkeleton />;
+  if (isLoading) return <DashboardCategoriesTableSkeleton />;
   if (error) return <Center>Error loading categories</Center>;
 
   const categories = data?.data || [];

@@ -15,7 +15,12 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import DashboardProductsTableSkeleton from "./DashboardProductsTableSkeleton";
-import { useDeleteDashboardProductsMutation, useGetDashboardProductsQuery, useUpdateDashboardProductsMutation } from "../app/services/apiSlice";
+import { 
+  useDeleteDashboardProductsMutation, 
+  useGetDashboardProductsQuery, 
+  useUpdateDashboardProductsMutation,
+  useAddDashboardProductMutation
+} from "../app/services/apiSlice";
 import type { IProduct } from "../interfaces";
 import CustomAlertDialog from "../shared/AlertDialog";
 import CustomModal from "../shared/Modal";
@@ -30,66 +35,40 @@ const DashboardProductsTable = () => {
     description: "",
     price: 0,
     stock: 0,
-    category: {
-      title: ""
-    },
-    thumbnail: {
-      url: ""
-    },
+    category: { title: "" },
+    thumbnail: { url: "" },
     quantity: 0
   });
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure()
-  const { isLoading, data, error } = useGetDashboardProductsQuery(undefined);
-  const [destroyProduct, {isLoading: isDestroying, isSuccess}] = useDeleteDashboardProductsMutation();
-  const [updateProduct, {isLoading: isUpdating, isSuccess: isUpdatingSuccess}] = useUpdateDashboardProductsMutation();
-  const initialRef = useRef(null)
 
+  // --- Modals ---
+  const { isOpen, onOpen, onClose } = useDisclosure() // Delete
+  const { isOpen: isModalOpen, onOpen: onModalOpen, onClose: onModalClose } = useDisclosure() // Edit
+  const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure() // Add
+
+  const { isLoading, data, error } = useGetDashboardProductsQuery(undefined);
+  const [destroyProduct, {isLoading: isDestroying, isSuccess: isDestroySuccess}] = useDeleteDashboardProductsMutation();
+  const [updateProduct, {isLoading: isUpdating, isSuccess: isUpdateSuccess}] = useUpdateDashboardProductsMutation();
+  const [addProduct, {isLoading: isAdding, isSuccess: isAddSuccess}] = useAddDashboardProductMutation();
+
+  const initialRef = useRef(null)
   const borderColor = useColorModeValue('gray.200', 'gray.700');
 
-  // Handler
+  // --- Handlers ---
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {name, value} = e.target
-
-    setProductToEdit((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setProductToEdit(prev => ({ ...prev, [name]: value }));
   }
   const onChangePriceHandler = (valueAsString: string, valueAsNumber: number) => {
-    setProductToEdit((prev) => ({
-      ...prev,
-      price: valueAsNumber,
-    }));
+    setProductToEdit(prev => ({ ...prev, price: valueAsNumber }));
   }
   const onChangeStockHandler = (valueAsString: string, valueAsNumber: number) => {
-    setProductToEdit((prev) => ({
-      ...prev,
-      stock: valueAsNumber,
-    }));
+    setProductToEdit(prev => ({ ...prev, stock: valueAsNumber }));
   }
   const onChangeThumbnailHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setThumbnail(file);
-    }
-  }
-  const onSubmitHandler = () => {
-    const formData = new FormData();
-
-    formData.append("data[title]", productToEdit.title);
-    formData.append("data[description]", productToEdit.description);
-    formData.append("data[price]", (productToEdit.price ?? 0).toString());
-    formData.append("data[stock]", (productToEdit.stock ?? 0).toString());
-
-    if (thumbnail) {
-      formData.append("files.thumbnail", thumbnail);
-    }
-
-    updateProduct({ documentId: selectedDid, body: formData });
+    if (e.target.files && e.target.files[0]) setThumbnail(e.target.files[0]);
   }
 
-  const handleModalClose = () => {
+  const resetForm = () => {
     setThumbnail(null);
     setProductToEdit({
       id: 0,
@@ -98,50 +77,62 @@ const DashboardProductsTable = () => {
       description: "",
       price: 0,
       stock: 0,
-      category: {
-        title: ""
-      },
-      thumbnail: {
-        url: ""
-      },
+      category: { title: "" },
+      thumbnail: { url: "" },
       quantity: 0
     });
+  }
+
+  const onSubmitHandler = () => {
+    const formData = new FormData();
+    formData.append("data[title]", productToEdit.title);
+    formData.append("data[description]", productToEdit.description);
+    formData.append("data[price]", productToEdit.price.toString());
+    formData.append("data[stock]", productToEdit.stock.toString());
+    if (thumbnail) formData.append("files.thumbnail", thumbnail);
+
+    if (productToEdit.documentId) {
+      // Update
+      updateProduct({ documentId: productToEdit.documentId, body: formData });
+    } else {
+      // Add
+      addProduct(formData);
+    }
+  }
+
+  const handleModalClose = () => {
+    resetForm();
     onModalClose();
+  }
+  const handleAddClose = () => {
+    resetForm();
+    onAddClose();
   }
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isDestroySuccess) {
       setSelectedDid('')
       onClose()
     }
-    if (isUpdatingSuccess) {
-      setSelectedDid('')
-      onModalClose()
-    }
-  }, [isSuccess, isUpdatingSuccess])
+    if (isUpdateSuccess) handleModalClose()
+    if (isAddSuccess) handleAddClose()
+  }, [isDestroySuccess, isUpdateSuccess, isAddSuccess])
 
   if (isLoading) return <DashboardProductsTableSkeleton />;
   if (error) return <p>Error loading products</p>;
 
   return (
     <>
-      <HStack
-        maxW="95%"
-        mx="auto"
-        justify="space-between"
-        mb={6}
-      >
+      <HStack maxW="95%" mx="auto" justify="space-between" mb={6}>
         <Heading size="lg">Products</Heading>
-        <Button colorScheme="teal">+ Add Product</Button>
+        <Button colorScheme="teal" onClick={() => {
+          resetForm();
+          onAddOpen();
+        }}>+ Add Product</Button>
       </HStack>
-      <TableContainer
-        maxW="95%"
-        mx="auto"
-        border="1px"
-        borderColor={borderColor}
-        borderRadius={6}
-        overflowX="auto"
-      >
+
+      {/* Table */}
+      <TableContainer maxW="95%" mx="auto" border="1px" borderColor={borderColor} borderRadius={6} overflowX="auto">
         <Table variant="simple" colorScheme='gray'>
           <TableCaption my={2}>Total Entries: {data?.data?.length ?? 0}</TableCaption>
           <Thead bg="gray.200" _dark={{ bg: "gray.700" }}>
@@ -160,13 +151,7 @@ const DashboardProductsTable = () => {
               <Tr key={product.id} _hover={{ bg: borderColor }} cursor="pointer">
                 <Td>{idx + 1}</Td>
                 <Td>
-                  <Image
-                    src={`${import.meta.env.VITE_SERVER_URL}${product.thumbnail.url}`}
-                    alt={product.title} 
-                    boxSize="50px" 
-                    objectFit="cover" 
-                    borderRadius="md" 
-                  />
+                  <Image src={`${import.meta.env.VITE_SERVER_URL}${product.thumbnail.url}`} alt={product.title} boxSize="50px" objectFit="cover" borderRadius="md" />
                 </Td>
                 <Td>{product.title}</Td>
                 <Td isNumeric>${product.price}</Td>
@@ -174,29 +159,15 @@ const DashboardProductsTable = () => {
                 <Td isNumeric>{product.stock}</Td>
                 <Td>
                   <HStack spacing={2}>
-                    <Button size="sm" colorScheme="blue" variant="outline">
-                      View
-                    </Button>
+                    <Button size="sm" colorScheme="blue" variant="outline">View</Button>
                     <Button size="sm" colorScheme="yellow" variant="outline"
                       onClick={() => {
                         setSelectedDid(product.documentId)
                         setProductToEdit(product)
                         onModalOpen()
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      colorScheme="red" 
-                      variant="outline"
-                      onClick={() => {
-                        setSelectedDid(product.documentId)
-                        onOpen()
-                      }}
-                    >
-                      Delete
-                    </Button>
+                      }}>Edit</Button>
+                    <Button size="sm" colorScheme="red" variant="outline"
+                      onClick={() => { setSelectedDid(product.documentId); onOpen() }}>Delete</Button>
                   </HStack>
                 </Td>
               </Tr>
@@ -226,15 +197,16 @@ const DashboardProductsTable = () => {
         deleteId={selectedDid}
         isLoading={isDestroying}
       />
-      {/* Edit Modal */}
+
+      {/* Add / Edit Modal */}
       <CustomModal
-        isOpen={isModalOpen}
-        onClose={handleModalClose}
-        title="Update Product"
-        okTxt="Update"
+        isOpen={isModalOpen || isAddOpen}
+        onClose={isModalOpen ? handleModalClose : handleAddClose}
+        title={isModalOpen ? "Update Product" : "Add Product"}
+        okTxt={isModalOpen ? "Update" : "Add"}
         initialRef={initialRef}
         onOkClick={onSubmitHandler}
-        isLoading={isUpdating}
+        isLoading={isUpdating || isAdding}
       >
         <FormControl>
           <FormLabel>Title</FormLabel>

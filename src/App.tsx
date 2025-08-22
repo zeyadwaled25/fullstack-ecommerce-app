@@ -9,7 +9,7 @@ import CartDrawer from "./components/CartDrawer";
 import DashboardLayout from "./pages/dashboard/DashboardLayout";
 import AdminDashboard from "./pages/dashboard";
 import DashboardProducts from "./pages/dashboard/DashboardProducts";
-import DashboardCategoriesTable from "./pages/dashboard/DashboardCategoriesTable";
+import DashboardCategories from "./pages/dashboard/DashboardCategories";
 
 const App = () => {
   const token = CookieService.get('jwt');
@@ -18,18 +18,18 @@ const App = () => {
     <>
       <CartDrawer />
       <Routes>
-        <Route path="/" element={<AppLayout/>}>
-          <Route index element={<HomePage/>}/>
-          <Route path="/products" element={<ProductsPage/>}/>
-          <Route path="/products/:documentId" element={<ProductPage/>}/>
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/:documentId" element={<ProductPage />} />
         </Route>
-        <Route path="/dashboard" element={<DashboardLayout/>}>
-          <Route index element={<AdminDashboard/>}/>
-          <Route path="products" element={<DashboardProducts />}/>
-          <Route path="categories" element={<DashboardCategoriesTable />}/>
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="products" element={<DashboardProducts />} />
+          <Route path="categories" element={<DashboardCategories />} />
         </Route>
 
-        <Route path="/login" element={<LoginPage isAuthenticated={token}/>}/>
+        <Route path="/login" element={<LoginPage isAuthenticated={token} />} />
       </Routes>
     </>
   );
