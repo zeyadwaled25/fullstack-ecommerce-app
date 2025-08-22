@@ -9,13 +9,13 @@ const ProductCard = (attributes: IProduct) => {
 
   return (
     <Card border={'1px solid #a8b5c8'} bg={'none'} key={id}>
-      <CardBody>
+      <CardBody py={5} px={4}>
         <Image
           src={`${import.meta.env.VITE_SERVER_URL}${thumbnail.url}`}
           alt={title} 
           borderRadius='50%'
-          width={'180px'}
-          height={'180px'}
+          width={'150px'}
+          height={'150px'}
           mx={'auto'}
           objectFit={'cover'}
         />
@@ -30,7 +30,7 @@ const ProductCard = (attributes: IProduct) => {
         </Stack>
       </CardBody>
       <Divider />
-      <CardFooter>
+      <CardFooter p={3}>
         <Button
           as={Link}
           to={`/products/${documentId}`}

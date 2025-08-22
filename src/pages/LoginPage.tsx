@@ -62,16 +62,19 @@ export default function LoginPage({isAuthenticated}: IProps) {
     setIsPassword(false)
     dispatch(userLogin(user))
   }
+  
+  const flexColorMode = useColorModeValue('gray.50', 'gray.800')
+  const boxColorMode = useColorModeValue('white', 'gray.700')
 
   // protected route
-  if (isAuthenticated) return <Navigate to={-1} replace/>
+  if (isAuthenticated) return <Navigate to={"-1"} replace/>
 
   return (
     <Flex
       minH={'100vh'}
       align={'center'}
       justify={'center'}
-      bg={useColorModeValue('gray.50', 'gray.800')}>
+      bg={flexColorMode}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
         <Stack align={'center'}>
           <Heading fontSize={'4xl'}>Sign in to your account</Heading>
@@ -84,7 +87,7 @@ export default function LoginPage({isAuthenticated}: IProps) {
         <Box
           as='form'
           rounded={'lg'}
-          bg={useColorModeValue('white', 'gray.700')}
+          bg={boxColorMode}
           boxShadow={'lg'}
           p={8}
           onSubmit={submitHandler}>

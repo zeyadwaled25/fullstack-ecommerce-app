@@ -30,7 +30,7 @@ interface Props {
   to: string
 }
 
-const Links = ['Home', 'Dashboard', 'products']
+const Links = ['Home', 'Dashboard', 'Products']
 
 const NavLink = (props: Props) => {
   const { children, to } = props

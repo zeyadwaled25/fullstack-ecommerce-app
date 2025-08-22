@@ -4,6 +4,7 @@ import axios from "axios";
 import type { IProductResponse, IProduct } from "../interfaces";
 import { useQuery } from "react-query";
 import ProductSkeleton from "../components/ProductCardSkeleton";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 const ProductsPage = () => {
   const getProducts = async () => {
@@ -20,8 +21,20 @@ const ProductsPage = () => {
 
   return (
     <div>
-      <Text textAlign={'center'} my={3}>ProductsPage</Text>
-      <Grid margin={30} templateColumns={'repeat(auto-fill, minmax(300px, 1fr))'} gap={'6'}>
+      <Text
+        display={"flex"}
+        alignItems={"center"}
+        gap={2}
+        textAlign={'left'}
+        ms={30}
+        mt={5}
+        w={"fit-content"}
+        cursor={'pointer'}
+        onClick={() => window.history.back()}
+      >
+        <ArrowBackIcon /> ProductsPage
+      </Text>
+      <Grid margin={30} templateColumns={'repeat(auto-fill, minmax(250px, 1fr))'} gap={'5'}>
         {data?.data.map((product: IProduct) => (
           <ProductCard key={product.id} {...product} />
         ))}
