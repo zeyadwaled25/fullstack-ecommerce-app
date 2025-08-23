@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { store } from './app/store'
+import InternetConnectionProvider from './providers/InternetConnectionProvider'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,15 +18,17 @@ const queryClient = new QueryClient({
 })
 
 createRoot(document.getElementById('root')!).render(
-  <Provider store={store}>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <ChakraProvider>
-          <StrictMode>
-            <App />
-          </StrictMode>
-        </ChakraProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
-  </Provider>
+  <QueryClientProvider client={queryClient}>
+    <Provider store={store}>
+      <InternetConnectionProvider>
+        <BrowserRouter>
+          <ChakraProvider>
+            <StrictMode>
+              <App />
+            </StrictMode>
+          </ChakraProvider>
+        </BrowserRouter>
+      </InternetConnectionProvider>
+    </Provider>
+  </QueryClientProvider>
 )
