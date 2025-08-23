@@ -80,7 +80,7 @@ const ProductPage = () => {
       >
         <CardBody>
           <Image
-            src={`${import.meta.env.VITE_SERVER_URL}${data?.data?.thumbnail?.url}`}
+            src={data?.data?.thumbnail?.formats?.small?.url}
             alt={data?.data?.title}
             borderRadius="lg"
             h="190px"

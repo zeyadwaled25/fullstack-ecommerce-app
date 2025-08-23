@@ -31,6 +31,7 @@ export const apiSlice = createApi({
           Authorization: `Bearer ${CookieService.get('jwt')}`,
         },
         body,
+        formData: true,
       }),
       invalidatesTags: [{ type: 'Products', id: 'LIST' }],
     }),
@@ -42,6 +43,7 @@ export const apiSlice = createApi({
           Authorization: `Bearer ${CookieService.get('jwt')}`,
         },
         body,
+        formData: true,
       }),
       async onQueryStarted({ documentId, ...patch }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(

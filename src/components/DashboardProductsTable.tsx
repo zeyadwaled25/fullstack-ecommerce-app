@@ -163,7 +163,7 @@ const DashboardProductsTable = () => {
               <Tr key={product.id} _hover={{ bg: borderColor }} cursor="pointer">
                 <Td>{idx + 1}</Td>
                 <Td>
-                  <Image src={product.thumbnail ? `${import.meta.env.VITE_SERVER_URL}${product.thumbnail.url}` : "./product-placeholder.webp"} alt={product.title} boxSize="50px" objectFit="cover" borderRadius="md" />
+                  <Image src={product.thumbnail ? product.thumbnail?.formats?.small?.url : "./product-placeholder.webp"} alt={product.title} boxSize="50px" objectFit="cover" borderRadius="md" />
                 </Td>
                 <Td>{product.title}</Td>
                 <Td isNumeric>${product.price}</Td>
@@ -280,7 +280,7 @@ const DashboardProductsTable = () => {
             onChange={(e) =>
               setProductToEdit(prev => ({
                 ...prev,
-                category: { ...prev.category, documentId: e.target.value }
+                category: { ...prev.category, documentId: e.target.value, title: prev.category?.title ?? "" }
               }))
             }
           >
