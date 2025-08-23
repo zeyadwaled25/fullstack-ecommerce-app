@@ -14,8 +14,11 @@ import {
 } from "../app/services/apiSlice";
 import type { ICategory } from "../interfaces";
 import DashboardCategoriesTableSkeleton from "./DashboardCategoriesTableSkeleton";
+import { useSelector } from "react-redux";
+import { selectNetwork } from "../app/features/networkSlice";
 
 const DashboardCategoriesTable = () => {
+  const {isOnline} = useSelector(selectNetwork);
   const { data, isLoading, error } = useGetDashboardCategoriesQuery(undefined);
   const [addCategory] = useAddDashboardCategoryMutation();
   const [updateCategory] = useUpdateDashboardCategoryMutation();
@@ -34,7 +37,7 @@ const DashboardCategoriesTable = () => {
   const addRef = useRef(null);
   const editRef = useRef(null);
 
-  if (isLoading) return <DashboardCategoriesTableSkeleton />;
+  if (isLoading || !isOnline) return <DashboardCategoriesTableSkeleton />;
   if (error) return <Center>Error loading categories</Center>;
 
   const categories = data?.data || [];

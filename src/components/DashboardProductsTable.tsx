@@ -26,8 +26,11 @@ import {
 import type { ICategory, IProduct } from "../interfaces";
 import CustomAlertDialog from "../shared/AlertDialog";
 import CustomModal from "../shared/Modal";
+import { selectNetwork } from "../app/features/networkSlice";
+import { useSelector } from "react-redux";
 
 const DashboardProductsTable = () => {
+  const {isOnline} = useSelector(selectNetwork);
   const [selectedDid, setSelectedDid] = useState<string>("");
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [productToEdit, setProductToEdit] = useState<IProduct>({
@@ -127,7 +130,7 @@ const DashboardProductsTable = () => {
     if (isAddSuccess) handleAddClose()
   }, [isDestroySuccess, isUpdateSuccess, isAddSuccess])
 
-  if (isLoading) return <DashboardProductsTableSkeleton />;
+  if (isLoading || !isOnline) return <DashboardProductsTableSkeleton />;
   if (error) return <p>Error loading products</p>;
 
   return (

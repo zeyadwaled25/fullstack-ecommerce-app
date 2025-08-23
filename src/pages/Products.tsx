@@ -6,8 +6,11 @@ import { useQuery } from "react-query";
 import ProductSkeleton from "../components/ProductCardSkeleton";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { useNavigate } from "react-router-dom";
+import { selectNetwork } from "../app/features/networkSlice";
+import { useSelector } from "react-redux";
 
 const ProductsPage = () => {
+  const {isOnline} = useSelector(selectNetwork);
   const navigate = useNavigate();
   const getProducts = async () => {
     const {data} = await axios.get<IProductResponse>(`${import.meta.env.VITE_SERVER_URL}/api/products?fields=title,description,price,stock&populate=*&sort=createdAt:DESC`)
@@ -15,7 +18,7 @@ const ProductsPage = () => {
   }
 
   const { isLoading, data } = useQuery("products", () => getProducts())
-  if (isLoading) return (
+  if (isLoading || !isOnline) return (
     <Grid margin={30} templateColumns={'repeat(auto-fill, minmax(300px, 1fr))'} gap={'6'}>
       {Array.from({length: 20}, (_, idx) => <ProductSkeleton key={idx}/>)}
     </Grid>
