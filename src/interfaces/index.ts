@@ -6,6 +6,7 @@ export interface ICategory {
   id?: number;
   documentId?: string;
   title: string;
+  products?: IProduct[];
 }
 export interface IProduct {
   id: number;

@@ -98,14 +98,17 @@ const DashboardCategoriesTable = () => {
             <Tr>
               <Th>ID</Th>
               <Th>Name</Th>
+              <Th>Items</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
+
           <Tbody>
             {categories.map((cat: ICategory, idx: number) => (
               <Tr key={cat.id}>
                 <Td>{idx + 1}</Td>
                 <Td>{cat.title}</Td>
+                <Td>{cat.products?.length ?? 0}</Td>
                 <Td>
                   <HStack>
                     <Button
@@ -134,6 +137,7 @@ const DashboardCategoriesTable = () => {
             <Tr>
               <Th>ID</Th>
               <Th>Name</Th>
+              <Th>Items</Th>
               <Th>Actions</Th>
             </Tr>
           </Tfoot>
