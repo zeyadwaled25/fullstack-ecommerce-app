@@ -12,6 +12,7 @@ import {
   useColorModeValue,
   Textarea,
   Heading,
+  Select,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import DashboardProductsTableSkeleton from "./DashboardProductsTableSkeleton";
@@ -19,7 +20,8 @@ import {
   useDeleteDashboardProductsMutation, 
   useGetDashboardProductsQuery, 
   useUpdateDashboardProductsMutation,
-  useAddDashboardProductMutation
+  useAddDashboardProductMutation,
+  useGetDashboardCategoriesQuery
 } from "../app/services/apiSlice";
 import type { IProduct } from "../interfaces";
 import CustomAlertDialog from "../shared/AlertDialog";
@@ -35,7 +37,7 @@ const DashboardProductsTable = () => {
     description: "",
     price: 0,
     stock: 0,
-    category: { title: "" },
+    category: { title: "", documentId: "" },
     thumbnail: { url: "" },
     quantity: 0
   });
@@ -46,6 +48,8 @@ const DashboardProductsTable = () => {
   const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure() // Add
 
   const { isLoading, data, error } = useGetDashboardProductsQuery(undefined);
+  const { data: categories } = useGetDashboardCategoriesQuery(undefined); // 🟢 هتجيب الكاتيجورى
+
   const [destroyProduct, {isLoading: isDestroying, isSuccess: isDestroySuccess}] = useDeleteDashboardProductsMutation();
   const [updateProduct, {isLoading: isUpdating, isSuccess: isUpdateSuccess}] = useUpdateDashboardProductsMutation();
   const [addProduct, {isLoading: isAdding, isSuccess: isAddSuccess}] = useAddDashboardProductMutation();
@@ -77,7 +81,7 @@ const DashboardProductsTable = () => {
       description: "",
       price: 0,
       stock: 0,
-      category: { title: "" },
+      category: { title: "", documentId: "" },
       thumbnail: { url: "" },
       quantity: 0
     });
@@ -89,6 +93,11 @@ const DashboardProductsTable = () => {
     formData.append("data[description]", productToEdit.description);
     formData.append("data[price]", productToEdit.price.toString());
     formData.append("data[stock]", productToEdit.stock.toString());
+
+    if (productToEdit.category?.documentId) {
+      formData.append("data[category]", productToEdit.category.documentId);
+    }
+
     if (thumbnail) formData.append("files.thumbnail", thumbnail);
 
     if (productToEdit.documentId) {
@@ -151,11 +160,11 @@ const DashboardProductsTable = () => {
               <Tr key={product.id} _hover={{ bg: borderColor }} cursor="pointer">
                 <Td>{idx + 1}</Td>
                 <Td>
-                  <Image src={`${import.meta.env.VITE_SERVER_URL}${product.thumbnail.url}`} alt={product.title} boxSize="50px" objectFit="cover" borderRadius="md" />
+                  <Image src={product.thumbnail ? `${import.meta.env.VITE_SERVER_URL}${product.thumbnail.url}` : "./product-placeholder.webp"} alt={product.title} boxSize="50px" objectFit="cover" borderRadius="md" />
                 </Td>
                 <Td>{product.title}</Td>
                 <Td isNumeric>${product.price}</Td>
-                <Td>{product.category.title}</Td>
+                <Td>{product.category?.title ?? "No Category"}</Td>
                 <Td isNumeric>{product.stock}</Td>
                 <Td>
                   <HStack spacing={2}>
@@ -258,6 +267,25 @@ const DashboardProductsTable = () => {
               <NumberDecrementStepper />
             </NumberInputStepper>
           </NumberInput>
+        </FormControl>
+        {/* 🟢 Category Select */}
+        <FormControl my={3}>
+          <FormLabel>Category</FormLabel>
+          <Select
+            placeholder="Select category"
+            onChange={(e) =>
+              setProductToEdit(prev => ({
+                ...prev,
+                category: { ...prev.category, documentId: e.target.value }
+              }))
+            }
+          >
+            {categories?.data?.map((cat: any) => (
+              <option key={cat.documentId} value={cat.documentId}>
+                {cat.title}
+              </option>
+            ))}
+          </Select>
         </FormControl>
         <FormControl my={3}>
           <FormLabel>Thumbnail</FormLabel>
