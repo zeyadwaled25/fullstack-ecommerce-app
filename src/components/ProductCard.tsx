@@ -21,10 +21,10 @@ const ProductCard = (attributes: IProduct) => {
         />
         <Stack mt='6' spacing='3'>
           <Heading size='md' textAlign={'center'}>{title}</Heading>
-          <Text fontSize={'sm'} textAlign={'center'}>
+          <Text color='gray.500' fontSize={'sm'} textAlign={'center'}>
             {description}
           </Text>
-          <Text color='blue.300' fontSize='3xl' textAlign={'center'}>
+          <Text color='blue.400' fontSize='2xl' fontWeight="semibold" textAlign={'center'}>
             {formattedPrice(price)}
           </Text>
         </Stack>
@@ -34,8 +34,8 @@ const ProductCard = (attributes: IProduct) => {
         <Button
           as={Link}
           to={`/products/${documentId}`}
-          bg={colorMode === "light" ? "#e6f3fd" : "#9f7aea"}
-          color={colorMode !== "light" ? "#e6f3fd" : "#9f7aea"}
+          bg={colorMode === "light" ? "#e6f3fd" : "teal.600"}
+          color={colorMode !== "light" ? "#e6f3fd" : "teal.600"}
           size={"xl"}
           variant="outline"
           border={"none"}
@@ -43,8 +43,8 @@ const ProductCard = (attributes: IProduct) => {
           overflow={"hidden"}
           w={"full"}
           _hover={{
-            bg: colorMode !== "light" ? "#e6f3fd" : "#9f7aea",
-            color: colorMode === "light" ? "#e6f3fd" : "#9f7aea",
+            bg: colorMode !== "light" ? "#e6f3fd" : "teal.500",
+            color: colorMode === "light" ? "#e6f3fd" : "teal.500",
             border: "transparent",
           }}
         >

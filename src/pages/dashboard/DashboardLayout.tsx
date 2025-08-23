@@ -105,10 +105,10 @@ const NavItem = ({ to, icon, children, ...rest }: NavItemProps) => {
         mx="4"
         borderRadius="lg"
         role="group"
-        bg={isActive ? "purple.600" : "transparent"}
+        bg={isActive ? "teal.600" : "transparent"}
         color={isActive ? "white" : "inherit"}
         _hover={{
-          bg: 'purple.400',
+          bg: 'teal.400',
           color: 'white',
         }}
         _focus={{ boxShadow: 'none' }}

@@ -60,7 +60,7 @@ const ProductPage = () => {
     <>
       <Flex
         alignItems="center"
-        maxW="sm"
+        maxW="xs"
         mx="auto"
         my={7}
         fontSize="lg"
@@ -72,7 +72,7 @@ const ProductPage = () => {
       </Flex>
 
       <Card
-        maxW="sm"
+        maxW="xs"
         mx="auto"
         mb={20}
         border="1px solid #a8b5c8"
@@ -83,7 +83,7 @@ const ProductPage = () => {
             src={`${import.meta.env.VITE_SERVER_URL}${data?.data?.thumbnail?.url}`}
             alt={data?.data?.title}
             borderRadius="lg"
-            h="200px"
+            h="190px"
             w="full"
             objectFit={'cover'}
           />
@@ -91,12 +91,12 @@ const ProductPage = () => {
             <Heading size="md" textAlign="center">
               {data?.data?.title}
             </Heading>
-            <Text textAlign="center">
+            <Text textAlign="center" color="gray.500">
               {data?.data?.description}
             </Text>
             <Flex justify="space-between" px={2} maxW="full">
               <Text color="blue.400" fontSize="xl" fontWeight="semibold">
-                {data?.data?.category?.title}
+                {(data?.data?.category) ? data?.data?.category?.title : "No Category"}
               </Text>
               <Text color="green.400" fontSize="xl" fontWeight="bold">
                 {formattedPrice(data?.data?.price)}
@@ -112,11 +112,11 @@ const ProductPage = () => {
             onClick={addToCartHandler}
             w="full"
             size="lg"
-            bg={colorMode === "light" ? "#e6f3fd" : "#9f7aea"}
-            color={colorMode !== "light" ? "#e6f3fd" : "#9f7aea"}
+            bg={colorMode === "light" ? "#e6f3fd" : "teal.600"}
+            color={colorMode !== "light" ? "#e6f3fd" : "teal.600"}
             _hover={{
-              bg: colorMode !== "light" ? "#e6f3fd" : "#9f7aea",
-              color: colorMode === "light" ? "#e6f3fd" : "#9f7aea",
+              bg: colorMode !== "light" ? "#e6f3fd" : "teal.500",
+              color: colorMode === "light" ? "#e6f3fd" : "teal.500",
               border: "transparent",
             }}
             p={8}
