@@ -72,8 +72,11 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       h="full"
       {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          Logo
+        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold"
+          cursor={"pointer"}
+          onClick={() => window.location.replace('/')}
+        >
+          Home
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
@@ -102,12 +105,13 @@ const NavItem = ({ to, icon, children, ...rest }: NavItemProps) => {
         mx="4"
         borderRadius="lg"
         role="group"
-        bg={isActive ? "purple.500" : "transparent"}
+        bg={isActive ? "purple.600" : "transparent"}
         color={isActive ? "white" : "inherit"}
         _hover={{
           bg: 'purple.400',
           color: 'white',
         }}
+        _focus={{ boxShadow: 'none' }}
         {...rest}>
         {icon && (
           <Icon

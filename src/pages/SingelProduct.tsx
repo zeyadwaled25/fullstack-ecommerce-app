@@ -94,11 +94,11 @@ const ProductPage = () => {
             <Text textAlign="center">
               {data?.data?.description}
             </Text>
-            <Flex justify="space-between" px={4} maxW="full">
-              <Text color="blue.300" fontSize="2xl" textAlign="center">
+            <Flex justify="space-between" px={2} maxW="full">
+              <Text color="blue.400" fontSize="xl" fontWeight="semibold">
                 {data?.data?.category?.title}
               </Text>
-              <Text color="blue.300" fontSize="2xl" textAlign="center">
+              <Text color="green.400" fontSize="xl" fontWeight="bold">
                 {formattedPrice(data?.data?.price)}
               </Text>
             </Flex>

@@ -23,7 +23,7 @@ import {
   useAddDashboardProductMutation,
   useGetDashboardCategoriesQuery
 } from "../app/services/apiSlice";
-import type { IProduct } from "../interfaces";
+import type { ICategory, IProduct } from "../interfaces";
 import CustomAlertDialog from "../shared/AlertDialog";
 import CustomModal from "../shared/Modal";
 
@@ -91,8 +91,8 @@ const DashboardProductsTable = () => {
     const formData = new FormData();
     formData.append("data[title]", productToEdit.title);
     formData.append("data[description]", productToEdit.description);
-    formData.append("data[price]", productToEdit.price.toString());
-    formData.append("data[stock]", productToEdit.stock.toString());
+    formData.append("data[price]", (productToEdit.price ?? 0).toString());
+    formData.append("data[stock]", (productToEdit.stock ?? 0).toString());
 
     if (productToEdit.category?.documentId) {
       formData.append("data[category]", productToEdit.category.documentId);
@@ -273,6 +273,7 @@ const DashboardProductsTable = () => {
           <FormLabel>Category</FormLabel>
           <Select
             placeholder="Select category"
+            value={productToEdit.category?.documentId || ""}
             onChange={(e) =>
               setProductToEdit(prev => ({
                 ...prev,
@@ -280,7 +281,7 @@ const DashboardProductsTable = () => {
               }))
             }
           >
-            {categories?.data?.map((cat: any) => (
+            {categories?.data?.map((cat: ICategory) => (
               <option key={cat.documentId} value={cat.documentId}>
                 {cat.title}
               </option>
